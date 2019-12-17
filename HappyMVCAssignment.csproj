@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -120,10 +126,28 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ClassroomsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LateEventsController.cs" />
+    <Compile Include="Controllers\LateSettingsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912171534048_InitialCreate.cs" />
+    <Compile Include="Migrations\201912171534048_InitialCreate.Designer.cs">
+      <DependentUpon>201912171534048_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912171538491_Migrate1.cs" />
+    <Compile Include="Migrations\201912171538491_Migrate1.Designer.cs">
+      <DependentUpon>201912171538491_Migrate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Classroom.cs" />
+    <Compile Include="Models\HappyMVCAssignmentContext.cs" />
+    <Compile Include="Models\LateEvent.cs" />
+    <Compile Include="Models\LateSetting.cs" />
+    <Compile Include="Models\Student.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,10 +186,29 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\Classrooms\Create.cshtml" />
+    <Content Include="Views\Classrooms\Delete.cshtml" />
+    <Content Include="Views\Classrooms\Details.cshtml" />
+    <Content Include="Views\Classrooms\Edit.cshtml" />
+    <Content Include="Views\Classrooms\Index.cshtml" />
+    <Content Include="Views\LateEvents\Create.cshtml" />
+    <Content Include="Views\LateEvents\Delete.cshtml" />
+    <Content Include="Views\LateEvents\Details.cshtml" />
+    <Content Include="Views\LateEvents\Edit.cshtml" />
+    <Content Include="Views\LateEvents\Index.cshtml" />
+    <Content Include="Views\LateSettings\Create.cshtml" />
+    <Content Include="Views\LateSettings\Delete.cshtml" />
+    <Content Include="Views\LateSettings\Details.cshtml" />
+    <Content Include="Views\LateSettings\Edit.cshtml" />
+    <Content Include="Views\LateSettings\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -179,6 +222,14 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201912171534048_InitialCreate.resx">
+      <DependentUpon>201912171534048_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912171538491_Migrate1.resx">
+      <DependentUpon>201912171538491_Migrate1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

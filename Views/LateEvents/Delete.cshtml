@@ -1,0 +1,64 @@
+﻿@model HappyMVCAssignment.Models.LateEvent
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>LateEvent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMoney)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PushCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PushCount)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

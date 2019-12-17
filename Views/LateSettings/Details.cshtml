@@ -1,0 +1,50 @@
+﻿@model HappyMVCAssignment.Models.LateSetting
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LateSetting</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MoneyPerLate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MoneyPerLate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PushPerLate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PushPerLate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SecondRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SecondRate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ThirdRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ThirdRate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

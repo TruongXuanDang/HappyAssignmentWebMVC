@@ -1,0 +1,58 @@
+﻿@model HappyMVCAssignment.Models.LateEvent
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LateEvent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LateMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LateMoney)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PushCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PushCount)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

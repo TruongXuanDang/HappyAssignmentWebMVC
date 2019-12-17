@@ -22,5 +22,9 @@ namespace HappyMVCAssignment.Models
         public System.Data.Entity.DbSet<HappyMVCAssignment.Models.Student> Students { get; set; }
 
         public System.Data.Entity.DbSet<HappyMVCAssignment.Models.Classroom> Classrooms { get; set; }
+
+        public System.Data.Entity.DbSet<HappyMVCAssignment.Models.LateEvent> LateEvents { get; set; }
+
+        public System.Data.Entity.DbSet<HappyMVCAssignment.Models.LateSetting> LateSettings { get; set; }
     }
 }

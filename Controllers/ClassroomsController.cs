@@ -32,6 +32,8 @@ namespace HappyMVCAssignment.Controllers
             {
                 return HttpNotFound();
             }
+            var students = db.Students.Include(s => s.Classroom).Where(s => s.ClassroomId == id);
+            ViewBag.students = students.ToList(); 
             return View(classroom);
         }
 

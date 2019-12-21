@@ -9,6 +9,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<div>
+    <form method="post" action="/Students/Index">
+        <p style="font-weight: bold">Search student</p>
+        <input style="max-width: 320px" class="form-control" type="text" name="keyword" placeholder="Search by name,code,phone,email or class" value="@ViewBag.Keyword"/><br/>
+    </form>
+
+</div>
 <table class="table">
     <tr>
         <th>

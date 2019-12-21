@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using HappyMVCAssignment.Models;
+using LinqKit;
+using Microsoft.Ajax.Utilities;
 
 namespace HappyMVCAssignment.Controllers
 {
@@ -15,10 +17,21 @@ namespace HappyMVCAssignment.Controllers
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
 
         // GET: Students
-        public ActionResult Index()
+        public ActionResult Index(String keyword)
         {
             var students = db.Students.Include(s => s.Classroom);
-            return View(students.ToList());
+            var predicate = PredicateBuilder.New<Student>(true);
+            if (!keyword.IsNullOrWhiteSpace())
+            {
+                predicate = predicate.Or(f => f.Name.Contains(keyword));
+                predicate = predicate.Or(f => f.Code.Contains(keyword));
+                predicate = predicate.Or(f => f.Phone.Contains(keyword));
+                predicate = predicate.Or(f => f.Classroom.Name.Contains(keyword));
+                predicate = predicate.Or(f => f.Email.Contains(keyword));
+                ViewBag.Keyword = keyword;
+            }
+            var data = db.Students.AsExpandable().Where(predicate);
+            return View(data);
         }
 
         // GET: Students/Details/5

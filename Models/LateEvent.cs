@@ -14,11 +14,11 @@ namespace HappyMVCAssignment.Models
         public DateTime LateDate { get; set; }
 
         [Required()]
-        public Type LateType { get; set; }
+        public Type? LateType { get; set; }
 
         public enum Type
         {
-            Push = 0,
+            Push = 2,
             Money= 1
         }
 

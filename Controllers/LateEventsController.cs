@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -39,6 +40,7 @@ namespace HappyMVCAssignment.Controllers
         // GET: LateEvents/Create
         public ActionResult Create()
         {
+            ViewBag.lateSettings = db.LateSettings.FirstOrDefault();
             ViewBag.StudentId = new SelectList(db.Students, "Id", "Name");
             return View();
         }
@@ -48,13 +50,19 @@ namespace HappyMVCAssignment.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,LateDate,LateType,LateMoney,PushCount,StudentId")] LateEvent lateEvent)
+        public ActionResult Create( LateEvent lateEvent)
         {
-            if (ModelState.IsValid)
+            var currentEventDate = lateEvent.LateDate.Date;
+            
+            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate))
             {
                 db.LateEvents.Add(lateEvent);
                 db.SaveChanges();
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.errorMessage = "This student was attended";
             }
 
             ViewBag.StudentId = new SelectList(db.Students, "Id", "Name", lateEvent.StudentId);
@@ -84,11 +92,16 @@ namespace HappyMVCAssignment.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,LateDate,LateType,LateMoney,PushCount,StudentId")] LateEvent lateEvent)
         {
-            if (ModelState.IsValid)
+            var currentEventDate = lateEvent.LateDate.Date;
+            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate))
             {
                 db.Entry(lateEvent).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                ViewBag.errorMessage = "This student was attended";
             }
             ViewBag.StudentId = new SelectList(db.Students, "Id", "Name", lateEvent.StudentId);
             return View(lateEvent);
@@ -118,6 +131,37 @@ namespace HappyMVCAssignment.Controllers
             db.LateEvents.Remove(lateEvent);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public double CalculatePunishment (LateEvent currentEvent)
+        {
+            var lateSettings = db.LateSettings.FirstOrDefault();
+
+            IQueryable<LateEvent> eventsForTheSameStudent = db.LateEvents.Where(l => l.StudentId == currentEvent.StudentId);
+            DateTime theFirstPreviousDate = currentEvent.LateDate.AddDays(-1).Date;
+            DateTime theSecondPreviousDate = currentEvent.LateDate.AddDays(-2).Date;
+            DateTime theThirdPreviousDate = currentEvent.LateDate.AddDays(-3).Date;
+
+            if (eventsForTheSameStudent.Any(e=> EntityFunctions.TruncateTime(e.LateDate) == theFirstPreviousDate)  
+                && !eventsForTheSameStudent.Any(e => EntityFunctions.TruncateTime(e.LateDate) == theSecondPreviousDate))
+            {
+                currentEvent.LateMoney = lateSettings.MoneyPerLate*lateSettings.SecondRate;
+                currentEvent.PushCount = lateSettings.PushPerLate*lateSettings.SecondRate;
+            }
+            else if(eventsForTheSameStudent.Any(e => EntityFunctions.TruncateTime(e.LateDate) == theFirstPreviousDate) 
+                && eventsForTheSameStudent.Any(e => EntityFunctions.TruncateTime(e.LateDate) == theSecondPreviousDate)
+                && !eventsForTheSameStudent.Any(e => EntityFunctions.TruncateTime(e.LateDate) == theThirdPreviousDate))
+            {
+                currentEvent.LateMoney = lateSettings.MoneyPerLate * lateSettings.ThirdRate;
+                currentEvent.PushCount = lateSettings.PushPerLate * lateSettings.ThirdRate;
+            }
+            else
+            {
+                currentEvent.LateMoney = lateSettings.MoneyPerLate;
+                currentEvent.PushCount = lateSettings.PushPerLate ;
+            }
+
+            return currentEvent.LateType == LateEvent.Type.Money ? currentEvent.LateMoney : currentEvent.PushCount;
         }
 
         protected override void Dispose(bool disposing)

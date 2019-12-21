@@ -1,7 +1,9 @@
-﻿@model HappyMVCAssignment.Models.Classroom
+﻿@using HappyMVCAssignment.Models
+@model HappyMVCAssignment.Models.Classroom
 
 @{
     ViewBag.Title = "Details";
+    List<Student> students = ViewBag.students;
 }
 
 <h2>Details</h2>
@@ -17,17 +19,49 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
     </dl>
 </div>
+<table class="table">
+    <tr>
+        <th>Class</th>
+        <th>Name</th>
+        <th>Roll Number</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in students)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Classroom.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>*@
+        </tr>
+    }
+
+</table>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

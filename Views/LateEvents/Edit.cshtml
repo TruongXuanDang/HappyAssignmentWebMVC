@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Edit";
+    var lateSettings = ViewBag.lateSettings;
+    var errorMessage = ViewBag.errorMessage;
 }
 
 <h2>Edit</h2>
@@ -20,7 +22,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.LateDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LateDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.LateDate, new { htmlAttributes = new { @class = "form-control",  @Value = DateTime.Now.ToShortDateString() } })
                 @Html.ValidationMessageFor(model => model.LateDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -28,7 +30,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.LateType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.LateType, htmlAttributes: new { @class = "form-control" })
+                @Html.EnumDropDownListFor(model => model.LateType, "Please Select Type", htmlAttributes: new { @class = "form-control", @id = "lateType" })
                 @Html.ValidationMessageFor(model => model.LateType, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -36,7 +38,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.LateMoney, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LateMoney, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.LateMoney, new { htmlAttributes = new { @class = "form-control",@id="lateMoney", @readonly="readonly" } })
                 @Html.ValidationMessageFor(model => model.LateMoney, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -44,7 +46,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PushCount, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PushCount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PushCount, new { htmlAttributes = new { @class = "form-control",@id="pushCount", @readonly="readonly" } })
                 @Html.ValidationMessageFor(model => model.PushCount, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -52,7 +54,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.StudentId, "StudentId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("StudentId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("StudentId", null, htmlAttributes: new { @class = "form-control",@id="studentId"  })
                 @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -71,4 +73,9 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/LateEvents/Test.js")">
+            if (@errorMessage != null) {
+                alert(@errorMessage);
+            };
+    </script>
 }

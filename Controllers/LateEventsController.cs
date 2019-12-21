@@ -54,7 +54,7 @@ namespace HappyMVCAssignment.Controllers
         {
             var currentEventDate = lateEvent.LateDate.Date;
             
-            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate))
+            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate && l.StudentId == lateEvent.StudentId))
             {
                 db.LateEvents.Add(lateEvent);
                 db.SaveChanges();
@@ -93,7 +93,7 @@ namespace HappyMVCAssignment.Controllers
         public ActionResult Edit([Bind(Include = "Id,LateDate,LateType,LateMoney,PushCount,StudentId")] LateEvent lateEvent)
         {
             var currentEventDate = lateEvent.LateDate.Date;
-            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate))
+            if (ModelState.IsValid && !db.LateEvents.Any(l => EntityFunctions.TruncateTime(l.LateDate) == currentEventDate && l.StudentId == lateEvent.StudentId))
             {
                 db.Entry(lateEvent).State = EntityState.Modified;
                 db.SaveChanges();

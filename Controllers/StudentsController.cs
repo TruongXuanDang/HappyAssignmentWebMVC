@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using HappyMVCAssignment.Models;
 using LinqKit;
 using Microsoft.Ajax.Utilities;
+using PagedList;
 
 namespace HappyMVCAssignment.Controllers
 {
@@ -17,8 +18,17 @@ namespace HappyMVCAssignment.Controllers
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
 
         // GET: Students
-        public ActionResult Index(String keyword)
+        public ActionResult Index(String keyword,int? page, int? limit)
         {
+            if (page == null)
+            {
+                page = 1;
+            }
+
+            if (limit == null)
+            {
+                limit = 10;
+            }
             var students = db.Students.Include(s => s.Classroom);
             var predicate = PredicateBuilder.New<Student>(true);
             if (!keyword.IsNullOrWhiteSpace())
@@ -30,7 +40,7 @@ namespace HappyMVCAssignment.Controllers
                 predicate = predicate.Or(f => f.Email.Contains(keyword));
                 ViewBag.Keyword = keyword;
             }
-            var data = db.Students.AsExpandable().Where(predicate);
+            var data = db.Students.AsExpandable().Where(predicate).OrderByDescending(s => s.Id).ToPagedList(page.Value, limit.Value);
             return View(data);
         }
 

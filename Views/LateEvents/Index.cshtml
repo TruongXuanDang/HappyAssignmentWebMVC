@@ -1,7 +1,11 @@
-﻿@model IEnumerable<HappyMVCAssignment.Models.LateEvent>
+﻿@model List<HappyMVCAssignment.Models.LateEvent>
 
 @{
     ViewBag.Title = "Index";
+    var totalPage = ((int?)ViewBag.TotalPage).Value;
+    var currentPage = ((int?)ViewBag.CurrentPage).Value;
+    var limit = ((int?)ViewBag.Limit).Value;
+    var currentPara = "&start=" + ViewBag.Start + "&end=" + ViewBag.End;
 }
 
 <h2>Index</h2>
@@ -9,49 +13,171 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<input type="text" name="datefilter" value="" class="form-control" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="curve_chart" style="height: 500px"></div>
+    </div>
+</div>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Student.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LateType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LateMoney)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PushCount)
-        </th>
+        <th>Name</th>
+        <th>Late Date</th>
+        <th>Late Type</th>
+        <th>Late Money</th>
+        <th>Push Count</th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Student.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LateDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LateType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LateMoney)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PushCount)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LateType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LateMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PushCount)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+@if (totalPage > 1)
+{
+    <b>Page @currentPage of @totalPage</b>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (currentPage > 1)
+            {
+                <li>
+                    <a href="?page=1&limit=@(limit)@(currentPara)" aria-label="First">
+                        <span aria-hidden="true">First</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="?page=@(currentPage-1)&limit=@(limit)@(currentPara)" aria-label="Previous">
+                        <span aria-hidden="true">Previous</span>
+                    </a>
+                </li>
+            }
+            @if (currentPage > 2)
+            {
+                <li><a href="?page=@(currentPage-2)&limit=@(limit)@(currentPara)">@(currentPage - 2)</a></li>
+            }
+            @if (currentPage > 1)
+            {
+                <li><a href="?page=@(currentPage-1)&limit=@(limit)@(currentPara)">@(currentPage - 1)</a></li>
+            }
+            <li class="active"><a href="?page=@(currentPage)&limit=@(limit)@(currentPara)">@currentPage</a></li>
+            @if (totalPage - currentPage > 0)
+            {
+                <li><a href="?page=@(currentPage+1)&limit=@(limit)@(currentPara)">@(currentPage + 1)</a></li>
+            }
+            @if (totalPage - currentPage > 1)
+            {
+                <li><a href="?page=@(currentPage+2)&limit=@(limit)@(currentPara)">@(currentPage + 2)</a></li>
+            }
+            @if (currentPage < totalPage)
+            {
+                <li>
+                    <a href="?page=@(currentPage+1)&limit=@(limit)@(currentPara)" aria-label="Next">
+                        <span aria-hidden="true">Next</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="?page=@totalPage&limit=@(limit)@(currentPara)" aria-label="Next">
+                        <span aria-hidden="true">Last</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+@section scripts{
+    <script type="text/javascript">
+        $(function() {
+            var startDate = new Date();
+            startDate.setFullYear(startDate.getFullYear() - 1);
+            var endDate = new Date();
+            var startPara = getParameterFromUrl('start');
+            if (startPara != null) {
+                startDate = new Date(startPara);
+            }
+            var endPara = getParameterFromUrl('end');
+            if (endPara != null) {
+                endDate = new Date(endPara);
+            }
+            $('input[name="datefilter"]').daterangepicker({
+                autoUpdateInput: true,
+                startDate: startDate,
+                endDate: endDate,
+                locale: {
+                    cancelLabel: 'Clear'
+                },
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            });
+            $('input[name="datefilter"]').on('apply.daterangepicker',
+                function(ev, picker) {
+                    var start = picker.startDate.format('YYYY-MM-DD');
+                    var end = picker.endDate.format('YYYY-MM-DD');
+                    window.location.href = window.location.href.split('?')[0] + '?start=' + start + '&end=' + end;
+                });
+            
+            $.ajax({
+                url: `/LateEvents/GetChartData?start=${startPara}&end=${endPara}`,
+                type: 'GET',
+                success: function(responseData) {
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('date', 'Time');
+                        //data.addColumn('number', 'PushCount');
+                        data.addColumn('number', 'Money');
+                        for (var i = 0; i < responseData.length; i++) {
+                            data.addRow([new Date(responseData[i].Date), responseData[i].Count]);
+                        }
+                        var options = {
+                            title: 'Thống kê số tiền hoặc chống đẩy của sinh viên theo thời gian',
+                            curveType: 'function',
+                            legend: { position: 'bottom' }
+                        };
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                        chart.draw(data, options);
+                    }
+                }
+            });
+        });
+        function getParameterFromUrl(parameter) {
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            return url.searchParams.get(parameter);
+        }
+    </script>
+}
+

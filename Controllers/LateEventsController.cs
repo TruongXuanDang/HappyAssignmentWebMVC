@@ -16,12 +16,96 @@ namespace HappyMVCAssignment.Controllers
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
 
         // GET: LateEvents
-        public ActionResult Index()
+        public ActionResult Index(int? page, int? limit, string start, string end)
         {
-            var lateEvents = db.LateEvents.Include(l => l.Student);
-            return View(lateEvents.ToList());
-        }
+            if (page == null)
+            {
+                page = 1;
+            }
 
+            if (limit == null)
+            {
+                limit = 10;
+            }
+            var startTime = DateTime.Now;
+            startTime = startTime.AddYears(-1);
+            try
+            {
+                startTime = DateTime.Parse(start);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            var endTime = DateTime.Now;
+            try
+            {
+                endTime = DateTime.Parse(end);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            ViewBag.limit = limit;
+            var lateEvents = db.LateEvents.OrderByDescending(s => s.LateDate).Where(s => s.LateDate >= startTime && s.LateDate <= endTime);
+            ViewBag.TotalPage = Math.Ceiling((double)lateEvents.Count() / limit.Value);
+            ViewBag.CurrentPage = page;
+            ViewBag.Limit = limit;
+            ViewBag.Start = startTime.ToString("yyyy-MM-dd");
+            ViewBag.End = endTime.ToString("yyyy-MM-dd");
+            var list = lateEvents.Skip((page.Value - 1) * limit.Value).Take(limit.Value).ToList();
+            return View(list);
+        }
+        public ActionResult GetChartData(string start, string end)
+        {
+            var startTime = DateTime.Now;
+            startTime = startTime.AddYears(-1);
+            try
+            {
+                startTime = DateTime.Parse(start);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            startTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, 0, 0, 0, 0);
+
+            var endTime = DateTime.Now;
+            try
+            {
+                endTime = DateTime.Parse(end);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            endTime = new DateTime(endTime.Year, endTime.Month, endTime.Day, 23, 59, 59, 0);
+
+            var data = db.LateEvents.Where(s =>s.LateDate >= startTime && s.LateDate <= endTime)
+                .GroupBy(
+                    s => new
+                    {
+                        Year = s.LateDate.Year,
+                        Month = s.LateDate.Month,
+                        Day = s.LateDate.Day
+                    }
+                ).Select(s => new
+                {
+                    Date = s.FirstOrDefault().LateDate,
+                    Count = s.Count()
+                }).OrderBy(s => s.Date).ToList();
+            return new JsonResult()
+            {
+                Data = data.Select(s => new
+                {
+                    Date = s.Date.ToString("MM/dd/yyyy"),
+                    Count = s.Count
+                }),
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+        }
         // GET: LateEvents/Details/5
         public ActionResult Details(int? id)
         {

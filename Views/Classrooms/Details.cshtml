@@ -1,26 +1,28 @@
 ﻿@using HappyMVCAssignment.Models
-@model HappyMVCAssignment.Models.Classroom
+@model PagedList.IPagedList<HappyMVCAssignment.Models.Student>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Details";
     List<Student> students = ViewBag.students;
+    var limit = ViewBag.limit is int ? (int)ViewBag.limit : 10;
 }
 
 <h2>Details</h2>
 
-<div>
-    <h4>Classroom</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+@*<div>
+        <h4>Classroom</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-</div>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+        </dl>
+    </div>*@
 <table class="table">
     <tr>
         <th>Class</th>
@@ -54,15 +56,21 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             @*<td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>*@
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>*@
         </tr>
     }
 
 </table>
+<br />
+@if (Model.PageCount > 1)
+{
+    <div>Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount</div>
+    @Html.PagedListPager(Model, page => Url.Action("Details",
+        new { page, limit = limit}))
+}
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

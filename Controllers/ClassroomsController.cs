@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using HappyMVCAssignment.Models;
+using PagedList;
 
 namespace HappyMVCAssignment.Controllers
 {
@@ -21,8 +22,17 @@ namespace HappyMVCAssignment.Controllers
         }
 
         // GET: Classrooms/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? page, int? limit)
         {
+            if (page == null)
+            {
+                page = 1;
+            }
+
+            if (limit == null)
+            {
+                limit = 10;
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -32,9 +42,10 @@ namespace HappyMVCAssignment.Controllers
             {
                 return HttpNotFound();
             }
-            var students = db.Students.Include(s => s.Classroom).Where(s => s.ClassroomId == id);
-            ViewBag.students = students.ToList(); 
-            return View(classroom);
+            var students = db.Students.Include(s => s.Classroom).Where(s => s.ClassroomId == id).OrderByDescending(s => s.Id).ToPagedList(page.Value, limit.Value);
+            ViewBag.students = students.ToList();
+            //var data = db.Students.OrderByDescending(s => s.Id).ToPagedList(page.Value, limit.Value);
+            return View(students);
         }
 
         // GET: Classrooms/Create

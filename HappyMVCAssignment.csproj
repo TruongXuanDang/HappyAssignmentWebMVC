@@ -217,6 +217,7 @@
     <Content Include="Views\LateSettings\Details.cshtml" />
     <Content Include="Views\LateSettings\Edit.cshtml" />
     <Content Include="Views\LateSettings\Index.cshtml" />
+    <Content Include="Views\Classrooms\AddStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -6,6 +6,9 @@
     var currentPage = ((int?)ViewBag.CurrentPage).Value;
     var limit = ((int?)ViewBag.Limit).Value;
     var currentPara = "&start=" + ViewBag.Start + "&end=" + ViewBag.End;
+
+    var studentList = ViewBag.StudentList;
+    var classList = ViewBag.ClassList;
 }
 
 <h2>Index</h2>
@@ -13,11 +16,36 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<input type="text" name="datefilter" value="" class="form-control" />
+
+    <div class="col-md-4">
+
+        <input type="text" name="datefilter" value="" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <select id="studentList" class="form-control">
+            @foreach (var item in studentList)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+
+        <select id="classList" class="form-control">
+            @foreach (var item in classList)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div id="curve_chart" style="height: 500px"></div>
+    </div>
+    <div class="col-md-6">
+        <div id="curve_chart_push" style="height: 500px"></div>
     </div>
 </div>
 <table class="table">
@@ -113,7 +141,7 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 @section scripts{
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             var startDate = new Date();
             startDate.setFullYear(startDate.getFullYear() - 1);
             var endDate = new Date();
@@ -125,6 +153,9 @@
             if (endPara != null) {
                 endDate = new Date(endPara);
             }
+            var studentId = getParameterFromUrl('studentId');
+            var classId = getParameterFromUrl('classId');
+            
             $('input[name="datefilter"]').daterangepicker({
                 autoUpdateInput: true,
                 startDate: startDate,
@@ -142,32 +173,65 @@
                 }
             });
             $('input[name="datefilter"]').on('apply.daterangepicker',
-                function(ev, picker) {
+                function (ev, picker) {
                     var start = picker.startDate.format('YYYY-MM-DD');
                     var end = picker.endDate.format('YYYY-MM-DD');
-                    window.location.href = window.location.href.split('?')[0] + '?start=' + start + '&end=' + end;
+                    window.location.href = window.location.href.split('?')[0] + '?start=' + startDate + '&end=' + endDate;
                 });
+
+            $("#studentList").on('change', function () {
+                var studentId = $("#studentList option:selected").val();
+                var start = startDate;
+                var end = endDate;
+                window.location.href = window.location.href.split('?')[0] + '?studentId=' + studentId+ '&start=' + start + '&end=' + end;
             
+            });
+
+            $("#classList").on('change', function () {
+                var classId = $("#classList option:selected").val();
+                var start = startDate;
+                var end = endDate;
+                window.location.href = window.location.href.split('?')[0] + '?classId=' + classId+ '&start=' + start + '&end=' + end;
+            });
+
             $.ajax({
-                url: `/LateEvents/GetChartData?start=${startPara}&end=${endPara}`,
+                url: `/LateEvents/GetChartData?start=${startPara}&end=${endPara}&studentId=${studentId}&classId=${classId}`,
                 type: 'GET',
-                success: function(responseData) {
+                success: function (responseData) {
                     google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
+                    google.charts.setOnLoadCallback(drawChartPushCount);
+
                     function drawChart() {
                         var data = new google.visualization.DataTable();
                         data.addColumn('date', 'Time');
                         //data.addColumn('number', 'PushCount');
                         data.addColumn('number', 'Money');
                         for (var i = 0; i < responseData.length; i++) {
-                            data.addRow([new Date(responseData[i].Date), responseData[i].Count]);
+                            data.addRow([new Date(responseData[i].Date), responseData[i].LateMoney]);
                         }
                         var options = {
-                            title: 'Thống kê số tiền hoặc chống đẩy của sinh viên theo thời gian',
+                            title: 'Thống kê số tiền của sinh viên theo thời gian',
                             curveType: 'function',
                             legend: { position: 'bottom' }
                         };
                         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+                        chart.draw(data, options);
+                    }
+
+                    function drawChartPushCount() {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('date', 'Time');
+                        data.addColumn('number', 'PushCount');
+                        for (var i = 0; i < responseData.length; i++) {
+                            data.addRow([new Date(responseData[i].Date), responseData[i].PushCount]);
+                        }
+                        var options = {
+                            title: 'Thống kê số chống đẩy của sinh viên theo thời gian',
+                            curveType: 'function',
+                            legend: { position: 'bottom' }
+                        };
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart_push'));
                         chart.draw(data, options);
                     }
                 }

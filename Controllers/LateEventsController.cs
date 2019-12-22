@@ -55,13 +55,19 @@ namespace HappyMVCAssignment.Controllers
             ViewBag.Limit = limit;
             ViewBag.Start = startTime.ToString("yyyy-MM-dd");
             ViewBag.End = endTime.ToString("yyyy-MM-dd");
+
+            ViewBag.StudentList = db.Students.ToList();
+            ViewBag.ClassList = db.Classrooms.ToList();
+
             var list = lateEvents.Skip((page.Value - 1) * limit.Value).Take(limit.Value).ToList();
             return View(list);
         }
-        public ActionResult GetChartData(string start, string end)
+        public ActionResult GetChartData(string start, string end, string studentId, string classId)
         {
             var startTime = DateTime.Now;
             startTime = startTime.AddYears(-1);
+            int studentIdValue = studentId !="null"?int.Parse(studentId):0;
+            int classIdValue = classId!="null"?int.Parse(classId):0;
             try
             {
                 startTime = DateTime.Parse(start);
@@ -84,6 +90,8 @@ namespace HappyMVCAssignment.Controllers
             endTime = new DateTime(endTime.Year, endTime.Month, endTime.Day, 23, 59, 59, 0);
 
             var data = db.LateEvents.Where(s =>s.LateDate >= startTime && s.LateDate <= endTime)
+                //.Where(s => s.StudentId == studentIdValue && s.StudentId != 0)
+                //.Where(s => s.Student.ClassroomId == classIdValue && s.Student.ClassroomId != 0)
                 .GroupBy(
                     s => new
                     {
@@ -94,14 +102,18 @@ namespace HappyMVCAssignment.Controllers
                 ).Select(s => new
                 {
                     Date = s.FirstOrDefault().LateDate,
-                    Count = s.Count()
+                    Count = s.Count(),
+                    PushCount = s.FirstOrDefault().PushCount,
+                    LateMoney = s.FirstOrDefault().LateMoney
                 }).OrderBy(s => s.Date).ToList();
             return new JsonResult()
             {
                 Data = data.Select(s => new
                 {
                     Date = s.Date.ToString("MM/dd/yyyy"),
-                    Count = s.Count
+                    Count = s.Count,
+                    PushCount = s.PushCount,
+                    LateMoney = s.LateMoney
                 }),
                 JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };

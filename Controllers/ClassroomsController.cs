@@ -21,6 +21,27 @@ namespace HappyMVCAssignment.Controllers
             return View(db.Classrooms.ToList());
         }
 
+        public ActionResult AddStudent(int? id)
+        {
+            ViewBag.ClassroomId = id;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddStudent([Bind(Include = "Id,Name,Code,Phone,Email,Status,ClassroomId")]int id, Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                student.ClassroomId = id;
+                db.Students.Add(student);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.ClassroomId = id;
+            return View(student);
+        }
         // GET: Classrooms/Details/5
         public ActionResult Details(int? id, int? page, int? limit)
         {

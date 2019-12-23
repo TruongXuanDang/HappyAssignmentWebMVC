@@ -89,7 +89,7 @@ namespace HappyMVCAssignment.Controllers
             }
             endTime = new DateTime(endTime.Year, endTime.Month, endTime.Day, 23, 59, 59, 0);
 
-            var data = db.LateEvents.Where(s =>s.LateDate >= startTime && s.LateDate <= endTime)
+            var data = db.LateEvents.Where(s =>s.LateDate >= startTime && s.LateDate <= endTime )
                 //.Where(s => s.StudentId == studentIdValue && s.StudentId != 0)
                 //.Where(s => s.Student.ClassroomId == classIdValue && s.Student.ClassroomId != 0)
                 .GroupBy(

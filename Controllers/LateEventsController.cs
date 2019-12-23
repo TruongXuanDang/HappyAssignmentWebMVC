@@ -16,8 +16,11 @@ namespace HappyMVCAssignment.Controllers
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
 
         // GET: LateEvents
-        public ActionResult Index(int? page, int? limit, string start, string end)
+        public ActionResult Index(int? page, int? limit, string start, string end, string studentId, string classId)
         {
+            int studentIdValue = studentId != null ? int.Parse(studentId) : -1;
+            int classIdValue = classId != null ? int.Parse(classId) : -1;
+
             if (page == null)
             {
                 page = 1;
@@ -50,6 +53,14 @@ namespace HappyMVCAssignment.Controllers
 
             ViewBag.limit = limit;
             var lateEvents = db.LateEvents.OrderByDescending(s => s.LateDate).Where(s => s.LateDate >= startTime && s.LateDate <= endTime);
+            if (studentIdValue != -1)
+            {
+                lateEvents = lateEvents.Where(s => s.StudentId == studentIdValue);
+            }
+            if (classIdValue != -1)
+            {
+                lateEvents = lateEvents.Where(s => s.Student.ClassroomId == classIdValue);
+            }
             ViewBag.TotalPage = Math.Ceiling((double)lateEvents.Count() / limit.Value);
             ViewBag.CurrentPage = page;
             ViewBag.Limit = limit;
@@ -66,8 +77,8 @@ namespace HappyMVCAssignment.Controllers
         {
             var startTime = DateTime.Now;
             startTime = startTime.AddYears(-1);
-            int studentIdValue = studentId !="null"?int.Parse(studentId):0;
-            int classIdValue = classId!="null"?int.Parse(classId):0;
+            int studentIdValue = studentId !="null"?int.Parse(studentId):-1;
+            int classIdValue = classId!="null"?int.Parse(classId):-1;
             try
             {
                 startTime = DateTime.Parse(start);
@@ -89,10 +100,19 @@ namespace HappyMVCAssignment.Controllers
             }
             endTime = new DateTime(endTime.Year, endTime.Month, endTime.Day, 23, 59, 59, 0);
 
-            var data = db.LateEvents.Where(s =>s.LateDate >= startTime && s.LateDate <= endTime )
-                //.Where(s => s.StudentId == studentIdValue && s.StudentId != 0)
-                //.Where(s => s.Student.ClassroomId == classIdValue && s.Student.ClassroomId != 0)
-                .GroupBy(
+            var previousData = db.LateEvents.Where(s => s.LateDate >= startTime && s.LateDate <= endTime);
+            //.Where(s => s.StudentId == studentIdValue)
+            //.Where(s => s.Student.ClassroomId == classIdValue)
+            if (studentIdValue != -1)
+            {
+                previousData = previousData.Where(s => s.StudentId == studentIdValue);
+            }
+            if (classIdValue != -1)
+            {
+                previousData = previousData.Where(s => s.Student.ClassroomId == classIdValue);
+            }
+
+            var data = previousData.GroupBy(
                     s => new
                     {
                         Year = s.LateDate.Year,

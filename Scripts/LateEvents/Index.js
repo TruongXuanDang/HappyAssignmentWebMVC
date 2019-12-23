@@ -29,41 +29,16 @@
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     });
-    $('input[name="datefilter"]').on('apply.daterangepicker',
-        function (ev, picker) {
 
-            var dateValue = $('#datefilter').val();
-            var studentIdValue = $("#studentList option:selected").val();
-            var classIdValue = $("#classList option:selected").val();
-
-            var start = picker.startDate.format('YYYY-MM-DD');
-            var end = picker.endDate.format('YYYY-MM-DD');
-            window.location.href = window.location.href.split('?')[0] + '?start=' + startDate + '&end=' + endDate;
-        });
-
-    $("#studentList").on('change', function () {
-
+    $("#filterValueSubmit").on('click', function (e) {
+        e.preventDefault();
         var dateValue = $('#datefilter').val();
-        var studentIdValue = $("#studentList option:selected").val();
-        var classIdValue = $("#classList option:selected").val();
-
         var studentId = $("#studentList option:selected").val();
-        var start = startDate;
-        var end = endDate;
-        window.location.href = window.location.href.split('?')[0] + '?studentId=' + studentId + '&start=' + start + '&end=' + end;
-
-    });
-
-    $("#classList").on('change', function () {
-
-        var dateValue = $('#datefilter').val();
-        var studentIdValue = $("#studentList option:selected").val();
-        var classIdValue = $("#classList option:selected").val();
-
         var classId = $("#classList option:selected").val();
-        var start = startDate;
-        var end = endDate;
-        window.location.href = window.location.href.split('?')[0] + '?classId=' + classId + '&start=' + start + '&end=' + end;
+
+        var start = dateValue.split(" - ")[0];
+        var end = dateValue.split(" - ")[1];
+        window.location.href = window.location.href.split('?')[0] + '?studentId=' + studentId + '&classId=' + classId + '&start=' + start + '&end=' + end;
     });
 
     $.ajax({
@@ -77,7 +52,6 @@
             function drawChart() {
                 var data = new google.visualization.DataTable();
                 data.addColumn('date', 'Time');
-                //data.addColumn('number', 'PushCount');
                 data.addColumn('number', 'Money');
                 for (var i = 0; i < responseData.length; i++) {
                     data.addRow([new Date(responseData[i].Date), responseData[i].LateMoney]);

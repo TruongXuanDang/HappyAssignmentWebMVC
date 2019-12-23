@@ -17,11 +17,11 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <input type="text" name="datefilter" value="" class="form-control" id="datefilter"/>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <select id="studentList" class="form-control">
             <option value="-1">Please Select Student</option>
             @foreach (var item in studentList)
@@ -30,7 +30,7 @@
             }
         </select>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <select id="classList" class="form-control">
             <option value="-1">Please Select Class</option>
@@ -39,6 +39,9 @@
                 <option value="@item.Id">@item.Name</option>
             }
         </select>
+    </div>
+    <div class="col-md-3">
+        <input type="submit" id="filterValueSubmit" value="submit" class="form-control" name="filterValueSubmit"/>
     </div>
 
 

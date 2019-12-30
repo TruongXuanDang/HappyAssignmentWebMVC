@@ -11,12 +11,12 @@ namespace HappyMVCAssignment.Controllers
 {
     public class AccountsController : Controller
     {
-        private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
+        private HappyMVCAssignmentContext dbContext = new HappyMVCAssignmentContext();
         private UserManager<Account> userManager;
 
         public AccountsController()
         {
-            UserStore<Account> userStore = new UserStore<Account>(db);
+            UserStore<Account> userStore = new UserStore<Account>(dbContext);
             userManager = new UserManager<Account>(userStore);
         }
 
@@ -67,7 +67,7 @@ namespace HappyMVCAssignment.Controllers
                 CreatedAt = DateTime.Now,
             };
             IdentityResult result = userManager.Create(account, password);
-            userManager.AddToRole(account.Id, "User");
+            //userManager.AddToRole(account.Id, "User");
             return View("Register");
         }
     }

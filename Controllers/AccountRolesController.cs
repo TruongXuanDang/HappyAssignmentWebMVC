@@ -13,12 +13,12 @@ namespace HappyMVCAssignment.Controllers
     [Authorize(Roles ="Admin")]
     public class AccountRolesController : Controller
     {
-        private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
+        private HappyMVCAssignmentContext dbContext = new HappyMVCAssignmentContext();
         private RoleManager<AccountRole> roleManager;
 
         public AccountRolesController()
         {
-            RoleStore<AccountRole> roleStore = new RoleStore<AccountRole>(db);
+            RoleStore<AccountRole> roleStore = new RoleStore<AccountRole>(dbContext);
             roleManager = new RoleManager<AccountRole>(roleStore);
         }
         // GET: AccountRoles

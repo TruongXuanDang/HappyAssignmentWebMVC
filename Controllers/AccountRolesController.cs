@@ -10,7 +10,7 @@ using System.Web.Mvc;
 namespace HappyMVCAssignment.Controllers
 {
     
-
+    [Authorize(Roles ="Admin")]
     public class AccountRolesController : Controller
     {
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();

@@ -13,12 +13,39 @@ namespace HappyMVCAssignment.Controllers
     {
         private HappyMVCAssignmentContext db = new HappyMVCAssignmentContext();
         private UserManager<Account> userManager;
-        private RoleManager<AccountRole> roleManager;
 
         public AccountsController()
         {
             UserStore<Account> userStore = new UserStore<Account>(db);
             userManager = new UserManager<Account>(userStore);
+        }
+
+        // GET: Accounts
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(string username, string password)
+        {
+            Account account = userManager.Find(username, password);
+            if(account == null)
+            {
+                return HttpNotFound();
+            }
+            var ident = userManager.CreateIdentity(account, DefaultAuthenticationTypes.ApplicationCookie);
+            var authManager = HttpContext.GetOwinContext().Authentication;
+            authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = false},ident);
+
+            return Redirect("/Home");
+        }
+
+        [HttpPost]
+        public ActionResult Logout () 
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return View();
         }
 
         // GET: Accounts
@@ -40,6 +67,7 @@ namespace HappyMVCAssignment.Controllers
                 CreatedAt = DateTime.Now,
             };
             IdentityResult result = userManager.Create(account, password);
+            userManager.AddToRole(account.Id, "User");
             return View("Register");
         }
     }

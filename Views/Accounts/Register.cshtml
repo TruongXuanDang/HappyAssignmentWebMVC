@@ -4,11 +4,18 @@
 }
 
 <h2>Register</h2>
-<form action="Accounts/Register" method="post">
+<form action="/Accounts/ProcessRegister" method="post">
 
     <div>
-        User Name
-        
+        UserName
+        <input name="username" id="username" value="" />
+    </div>
+    <div>
+        Password
+        <input name="password" id="password" value="" />
+    </div>
+    <div>
+        <input type="submit" value="Submit" />
     </div>
 </form>
 

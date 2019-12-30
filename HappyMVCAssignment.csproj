@@ -163,6 +163,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountRolesController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\ClassroomsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -172,9 +173,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201912231214380_InitialCreate.cs" />
-    <Compile Include="Migrations\201912231214380_InitialCreate.Designer.cs">
-      <DependentUpon>201912231214380_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201912301301052_InitialCreate.cs" />
+    <Compile Include="Migrations\201912301301052_InitialCreate.Designer.cs">
+      <DependentUpon>201912301301052_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
@@ -247,6 +248,7 @@
     <Content Include="Views\LateSettings\Index.cshtml" />
     <Content Include="Views\Classrooms\AddStudent.cshtml" />
     <Content Include="Views\Accounts\Register.cshtml" />
+    <Content Include="Views\AccountRoles\AddRole.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -265,8 +267,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201912231214380_InitialCreate.resx">
-      <DependentUpon>201912231214380_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201912301301052_InitialCreate.resx">
+      <DependentUpon>201912301301052_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

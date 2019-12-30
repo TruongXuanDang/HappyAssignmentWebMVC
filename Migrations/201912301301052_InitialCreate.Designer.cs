@@ -13,7 +13,7 @@ namespace HappyMVCAssignment.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201912231214380_InitialCreate"; }
+            get { return "201912301301052_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

@@ -34,7 +34,10 @@ namespace HappyMVCAssignment.Controllers
             {
                 UserName = username,
                 FirstName = "Xuan Hung",
-                LastName = "Dao"
+                LastName = "Dao",
+                Avatar = "avatar",
+                Birthday = DateTime.Now,
+                CreatedAt = DateTime.Now,
             };
             IdentityResult result = userManager.Create(account, password);
             return View("Register");

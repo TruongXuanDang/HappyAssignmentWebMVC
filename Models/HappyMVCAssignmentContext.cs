@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Web;
 
 namespace HappyMVCAssignment.Models
 {
-    public class HappyMVCAssignmentContext : DbContext
+    public class HappyMVCAssignmentContext : IdentityDbContext<Account>
     {
         // You can add custom code to this file. Changes will not be overwritten.
         // 

@@ -176,6 +176,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountRole.cs" />
     <Compile Include="Models\Classroom.cs" />
     <Compile Include="Models\HappyMVCAssignmentContext.cs" />
     <Compile Include="Models\LateEvent.cs" />

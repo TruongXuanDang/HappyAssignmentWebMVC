@@ -6,12 +6,9 @@ using System.Web;
 
 namespace HappyMVCAssignment.Models
 {
-    public class Account:IdentityUser
+    public class AccountRole:IdentityRole
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Avatar { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

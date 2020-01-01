@@ -18,7 +18,7 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse col-md-6 pull-left">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Classrooms", "Index", "Classrooms")</li>
                     <li>@Html.ActionLink("Students", "Index", "Students")</li>
@@ -26,6 +26,29 @@
                     <li>@Html.ActionLink("LateSettings", "Index", "LateSettings")</li>
                 </ul>
             </div>
+            @using Microsoft.AspNet.Identity
+            @if (Request.IsAuthenticated)
+            {
+                using (Html.BeginForm("Logout", "Accounts", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li>@Html.ActionLink("AddRole", "AddRole", "AccountRoles")</li>
+        </ul>
+                }
+            }
+            else
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("Register", "Register", "Accounts", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                    <li>@Html.ActionLink("Log in", "Login", "Accounts", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                </ul>
+            }
         </div>
     </div>
     <div class="container body-content">

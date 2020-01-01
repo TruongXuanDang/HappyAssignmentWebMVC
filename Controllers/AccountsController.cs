@@ -45,7 +45,7 @@ namespace HappyMVCAssignment.Controllers
         public ActionResult Logout () 
         {
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return View();
+            return Redirect("/Home");
         }
 
         // GET: Accounts
@@ -67,7 +67,7 @@ namespace HappyMVCAssignment.Controllers
                 CreatedAt = DateTime.Now,
             };
             IdentityResult result = userManager.Create(account, password);
-            //userManager.AddToRole(account.Id, "User");
+            userManager.AddToRole(account.Id, "Admin");
             return View("Register");
         }
     }

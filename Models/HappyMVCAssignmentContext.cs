@@ -20,6 +20,11 @@ namespace HappyMVCAssignment.Models
         {
         }
 
+        public static HappyMVCAssignmentContext Create()
+        {
+            return new HappyMVCAssignmentContext();
+        }
+
         public System.Data.Entity.DbSet<HappyMVCAssignment.Models.Student> Students { get; set; }
 
         public System.Data.Entity.DbSet<HappyMVCAssignment.Models.Classroom> Classrooms { get; set; }

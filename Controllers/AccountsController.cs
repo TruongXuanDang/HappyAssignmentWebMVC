@@ -1,6 +1,8 @@
-﻿using HappyMVCAssignment.Models;
+﻿using HappyMVCAssignment.App_Start;
+using HappyMVCAssignment.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,35 @@ namespace HappyMVCAssignment.Controllers
 {
     public class AccountsController : Controller
     {
-        private HappyMVCAssignmentContext dbContext = new HappyMVCAssignmentContext();
-        private UserManager<Account> userManager;
+        private HappyMVCAssignmentContext dbContext;
+        private MyUserManager userManager;
+
+        public MyUserManager UserManager
+        {
+            get
+            {
+                return userManager ?? HttpContext.GetOwinContext().GetUserManager<MyUserManager>();
+            }
+            set
+            {
+                userManager = value;
+            }
+        }
+        public HappyMVCAssignmentContext DbContext
+        {
+            get
+            {
+                return dbContext ?? HttpContext.GetOwinContext().Get<HappyMVCAssignmentContext>();
+            }
+            set
+            {
+                dbContext = value;
+            }
+        }
 
         public AccountsController()
         {
-            UserStore<Account> userStore = new UserStore<Account>(dbContext);
-            userManager = new UserManager<Account>(userStore);
+            
         }
 
         // GET: Accounts
@@ -29,12 +53,12 @@ namespace HappyMVCAssignment.Controllers
         [HttpPost]
         public ActionResult Login(string username, string password)
         {
-            Account account = userManager.Find(username, password);
+            Account account = UserManager.Find(username, password);
             if(account == null)
             {
                 return HttpNotFound();
             }
-            var ident = userManager.CreateIdentity(account, DefaultAuthenticationTypes.ApplicationCookie);
+            var ident = UserManager.CreateIdentity(account, DefaultAuthenticationTypes.ApplicationCookie);
             var authManager = HttpContext.GetOwinContext().Authentication;
             authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = false},ident);
 
@@ -66,8 +90,8 @@ namespace HappyMVCAssignment.Controllers
                 Birthday = DateTime.Now,
                 CreatedAt = DateTime.Now,
             };
-            IdentityResult result = userManager.Create(account, password);
-            userManager.AddToRole(account.Id, "Admin");
+            IdentityResult result = UserManager.Create(account, password);
+            UserManager.AddToRole(account.Id, "Admin");
             return View("Register");
         }
     }

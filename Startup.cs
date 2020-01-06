@@ -3,11 +3,8 @@ using HappyMVCAssignment.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Google;
 using Owin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 [assembly: OwinStartupAttribute(typeof(HappyMVCAssignment.Startup))]
 namespace HappyMVCAssignment
@@ -22,6 +19,11 @@ namespace HappyMVCAssignment
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Home/Login"),
+            });
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions() { 
+                ClientId="",
+                ClientSecret = "",
             });
         }
     }

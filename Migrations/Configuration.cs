@@ -31,6 +31,9 @@ namespace HappyMVCAssignment.Migrations
             AddClassroom("T1807E");
             AddClassroom("T1808E");
 
+            context.Classrooms.AddRange(listClassroom);
+            context.SaveChanges();
+
             AddStudent("Tran Van An", 7);
             AddStudent("Tran Thi Binh", 7);
             AddStudent("Tran Van Tuan", 7);
@@ -79,16 +82,19 @@ namespace HappyMVCAssignment.Migrations
             AddStudent("Ho Tan Tai", 9);
             AddStudent("Nguyen Xuan Phuc", 9);
 
+            context.Students.AddRange(listStudent);
+            context.SaveChanges();
+
             for (var i = 0; i < 100; i++)
             {
                 AddLateEvent();
             }
 
+            context.LateEvents.AddRange(listLateEvent);
+            context.SaveChanges();
+
             AddLateSetting();
 
-            context.Classrooms.AddRange(listClassroom);
-            context.Students.AddRange(listStudent);
-            context.LateEvents.AddRange(listLateEvent);
             context.LateSettings.AddRange(listLateSetting);
             context.SaveChanges();
         }

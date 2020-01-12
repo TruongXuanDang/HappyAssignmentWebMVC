@@ -7,11 +7,16 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 //[assembly: OwinStartup(typeof(HappyMVCAssignment.App_Start.IdentityConfig))]
 namespace HappyMVCAssignment.App_Start
 {
@@ -79,6 +84,25 @@ namespace HappyMVCAssignment.App_Start
 
         public Task SendAsync(IdentityMessage message)
         {
+            ////Twilio Begin
+            //var accountSid = ConfigurationManager.AppSettings["SMSAccountIdentification"];
+            //var authToken = ConfigurationManager.AppSettings["SMSAccountPassword"];
+            //var fromNumber = ConfigurationManager.AppSettings["SMSAccountFrom"];
+
+            //TwilioClient.Init(accountSid, authToken);
+
+            //MessageResource result = MessageResource.Create(
+            //new PhoneNumber(message.Destination),
+            //from: new PhoneNumber(fromNumber),
+            //body: message.Body
+            //);
+
+            ////Status is one of Queued, Sending, Sent, Failed or null if the number is not valid
+            //Trace.TraceInformation(result.Status.ToString());
+            ////Twilio doesn't currently have an async API, so return success.
+            ////return Task.FromResult(0);
+            ////Twilio End
+
             MailMessage mail = new MailMessage();
             SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
             smtpServer.Credentials = new System.Net.NetworkCredential("truongdxth1804013@fpt.edu.vn", "phgwzunzkpeayybb");
